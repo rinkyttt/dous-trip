@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm cache:*)",
+      "Bash(mkdir -p /Users/yifantu/Desktop/yifan_personal/personal-web/src/app/api/search)",
+      "Bash(mkdir -p /Users/yifantu/Desktop/yifan_personal/personal-web/src/components)",
+      "Bash(mkdir -p /Users/yifantu/Desktop/yifan_personal/personal-web/src/lib)",
+      "Bash(npx next:*)",
+      "Bash(curl:*)",
+      "Bash(node:*)",
+      "Bash(npx tsx:*)",
+      "Bash(find /Users/yifantu/Desktop/yifan_personal/personal-web/.next/static -name *.css)",
+      "Bash(npm run:*)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}
