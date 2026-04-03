@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { defaultTripData, getAllStores, getStoreById, type Store, type TripStop } from "@/lib/mockData";
 import { SearchChat } from "@/components/SearchChat";
 import { StoreCard } from "@/components/StoreCard";
@@ -40,6 +40,42 @@ export default function Home() {
       () => {}
     );
   }, []);
+
+  // Load persisted data on mount, then enable auto-save
+  const [dataLoaded, setDataLoaded] = useState(false);
+  useEffect(() => {
+    fetch("/api/load")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data) {
+          if (data.allTripData) setAllTripData(data.allTripData);
+          if (data.savedStores) setSavedStores(data.savedStores);
+          if (data.visitedIds) setVisitedIds(new Set(data.visitedIds));
+          if (data.customStores) setCustomStores(data.customStores);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setDataLoaded(true));
+  }, []);
+
+  // Save whenever data changes (debounced 1s, only after initial load)
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!dataLoaded) return;
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      fetch("/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          allTripData,
+          savedStores,
+          visitedIds: Array.from(visitedIds),
+          customStores,
+        }),
+      }).catch(() => {});
+    }, 1000);
+  }, [allTripData, savedStores, visitedIds, customStores, dataLoaded]);
 
   const handleSearch = useCallback(async (query: string) => {
     setIsLoading(true);
