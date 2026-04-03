@@ -144,7 +144,7 @@ export default function Home() {
   }, []);
 
   const addedStoreIds = Object.values(allTripData).flat().map((s) => s.storeId);
-  const displayedStores = hasSearched ? stores : getAllStores().sort((a, b) => b.rating - a.rating);
+  const displayedStores = hasSearched ? stores : [];
   const mockStores = getAllStores();
   const allAvailableStores = [
     ...mockStores,
@@ -243,9 +243,11 @@ export default function Home() {
 
           {/* Store cards */}
           <section className="max-w-6xl mx-auto px-6 pb-24">
-            <p className="text-xs text-[#A89888] text-center mb-5">
-              {hasSearched ? `${stores.length} result${stores.length !== 1 ? "s" : ""}` : "All stores · sorted by rating"}
-            </p>
+            {hasSearched && (
+              <p className="text-xs text-[#A89888] text-center mb-5">
+                {stores.length} result{stores.length !== 1 ? "s" : ""}
+              </p>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {displayedStores.map((store, i) => (
                 <div key={store.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 60}ms` }}>
